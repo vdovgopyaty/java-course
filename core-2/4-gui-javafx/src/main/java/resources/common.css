@@ -1,0 +1,85 @@
+.main {
+    -fx-background-color: #333;
+}
+
+.wrapper {
+    -fx-padding: 15px 0 0 0;
+}
+
+.topPanel, .bottomPanel {
+    -fx-padding: 0 15px 15px 15px;
+}
+
+.rightBottomPanel {
+    -fx-padding: 0 0 0 15px;
+}
+
+.textArea {
+    -fx-padding: 3px;
+    -fx-wrap-text: true;
+    -fx-text-fill: #eee;
+    -fx-focus-traversable: false;
+    -fx-background-insets: 0;
+    -fx-background-color: #444;
+    text-area-background: #444;
+}
+
+.textArea .content,
+.textArea:focused .content {
+    -fx-background-color: text-area-background;
+}
+
+/* The main scrollbar **track** CSS class  */
+.textArea .scroll-bar:horizontal .track,
+.textArea .scroll-bar:vertical .track {
+    -fx-background-color: #444;
+    -fx-border-color: #444;
+    -fx-background-radius: 0em;
+    -fx-border-radius: 2em;
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+.textArea .scroll-bar:horizontal .increment-button,
+.textArea .scroll-bar:horizontal .decrement-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0em;
+    -fx-padding: 0 0 10 0;
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+.textArea .scroll-bar:vertical .increment-button,
+.textArea .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0em;
+    -fx-padding: 0 10 0 0;
+}
+
+.textArea .scroll-bar .increment-arrow,
+.textArea .scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
+.textArea .scroll-bar:horizontal .thumb,
+.textArea .scroll-bar:vertical .thumb {
+    -fx-background-color: #333;
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-radius: 2em;
+}
+
+.textField {
+    -fx-padding: 15px 10px;
+    -fx-text-fill: #eee;
+    -fx-background-color: #444;
+}
+
+.button {
+    -fx-padding: 15px 30px;
+    -fx-text-fill: #eee;
+    -fx-background-color: #444;
+}
+
+.button:hover {
+    -fx-background-color: #555;
+}

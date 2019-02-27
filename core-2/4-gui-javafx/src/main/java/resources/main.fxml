@@ -1,0 +1,25 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<GridPane styleClass="main" fx:controller="main.java.im.Controller" xmlns:fx="http://javafx.com/fxml"
+          stylesheets="@common.css">
+    <VBox styleClass="wrapper" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+        <HBox styleClass="topPanel" VBox.vgrow="ALWAYS">
+            <TextArea styleClass="textArea" fx:id="imHistory" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
+                      promptText="Send the first message"/>
+        </HBox>
+        <HBox styleClass="bottomPanel">
+            <VBox styleClass="leftBottomPanel" HBox.hgrow="ALWAYS">
+                <TextField fx:id="imMessage" styleClass="textField" promptText="Enter your message..."
+                           HBox.hgrow="ALWAYS"
+                           onAction="#sendMessage"/>
+            </VBox>
+            <VBox styleClass="rightBottomPanel">
+                <Button fx:id="imSend" styleClass="button" onAction="#sendMessage">Send</Button>
+            </VBox>
+        </HBox>
+    </VBox>
+</GridPane>
