@@ -29,11 +29,11 @@ public class Client {
                         // /auth login1 pass1
                         if (msg.startsWith("/auth ")) {
                             String[] tokens = msg.split("\\s");
-                            String nick = server.getAuthService().getNicknameByLoginAndPassword(tokens[1], tokens[2]);
-                            if (nick != null && !server.isNickBusy(nick)) {
-                                sendMsg("/authok " + nick);
+                            String nickname = server.getAuthService().getNickname(tokens[1], tokens[2]);
+                            if (nickname != null && !server.isNickBusy(nickname)) {
+                                sendMsg("/auth " + nickname);
+                                this.nickname = nickname;
                                 server.subscribe(this);
-                                nickname = nick;
                                 break;
                             }
                         }
@@ -42,6 +42,7 @@ public class Client {
                         String msg = in.readUTF();
                         if (msg.startsWith("/")) {
                             if (msg.equals("/end")) {
+                                sendMsg("/end");
                                 break;
                             }
                             if (msg.startsWith("/w ")) {

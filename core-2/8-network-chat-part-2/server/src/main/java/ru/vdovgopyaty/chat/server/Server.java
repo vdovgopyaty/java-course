@@ -17,11 +17,11 @@ public class Server {
         clients = new Vector<>();
         authService = new SimpleAuthService();
         try (ServerSocket serverSocket = new ServerSocket(8080)) {
-            System.out.println("Server listening on port " + serverSocket.getLocalPort() + "...");
+            System.out.println("Server is listening on port " + serverSocket.getLocalPort() + "...");
             while (true) {
                 Socket socket = serverSocket.accept();
                 new Client(this, socket);
-                System.out.println("New client connected");
+                System.out.println("Client connected");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,30 +35,53 @@ public class Server {
         }
     }
 
-    public void privateMsg(Client sender, String receiverNick, String msg) {
+    public void privateMsg(Client sender, String receiverNickname, String msg) {
+        if (sender.getNickname().equals(receiverNickname)) {
+            sender.sendMsg("Note: " + msg);
+            return;
+        }
         for (Client client : clients) {
-            if (client.getNickname().equals(receiverNick)) {
-                client.sendMsg("From " + sender.getNickname() + ": " + msg);
-                sender.sendMsg("To " + receiverNick + ":" + msg);
+            if (client.getNickname().equals(receiverNickname)) {
+                client.sendMsg(sender.getNickname() + " whispered" + ": " + msg);
+                sender.sendMsg("Whisper to " + receiverNickname + ": " + msg);
                 return;
             }
         }
+        sender.sendMsg("Client " + receiverNickname + " not found");
     }
 
-    public void subscribe(Client client) {
-        clients.add(client);
+    public void subscribe(Client Client) {
+        clients.add(Client);
+        broadcastClientsList();
     }
 
-    public void unsubscribe(Client client) {
-        clients.remove(client);
+    public void unsubscribe(Client Client) {
+        clients.remove(Client);
+        broadcastClientsList();
     }
 
     public boolean isNickBusy(String nickname) {
-        for (Client o : clients) {
-            if (o.getNickname().equals(nickname)) {
+        for (Client client : clients) {
+            if (client.getNickname().equals(nickname)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public void broadcastClientsList() {
+        StringBuilder sb = new StringBuilder(15 * clients.size());
+        sb.append("/clients ");
+        // '/clients '
+        for (Client client : clients) {
+            sb.append(client.getNickname()).append(" ");
+        }
+        // '/clients nick1 nick2 nick3 '
+        sb.setLength(sb.length() - 1);
+        // '/clients nick1 nick2 nick3'
+        String out = sb.toString();
+        for (Client client : clients) {
+            client.sendMsg(out);
+        }
     }
 }
