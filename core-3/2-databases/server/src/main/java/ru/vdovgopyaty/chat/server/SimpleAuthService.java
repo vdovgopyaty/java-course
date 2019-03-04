@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleAuthService implements AuthService {
+
     private class UserData {
         private String login;
         private String password;
@@ -33,5 +34,10 @@ public class SimpleAuthService implements AuthService {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean changeNickname(String currentNickname, String newNickname) {
+        return false;
     }
 }

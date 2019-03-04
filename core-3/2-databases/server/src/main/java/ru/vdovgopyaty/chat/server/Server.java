@@ -15,7 +15,13 @@ public class Server {
 
     public Server() {
         clients = new Vector<>();
-        authService = new SimpleAuthService();
+
+        if (!Database.connect()) {
+            throw new RuntimeException("Unable to connect to the database");
+        }
+
+        authService = new DatabaseAuthService();
+
         try (ServerSocket serverSocket = new ServerSocket(8080)) {
             System.out.println("Server is listening on port " + serverSocket.getLocalPort() + "...");
             while (true) {
@@ -25,8 +31,10 @@ public class Server {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            Database.disconnect();
+            System.out.println("Server closed");
         }
-        System.out.println("Server closed");
     }
 
     public void broadcastMsg(String msg) {
