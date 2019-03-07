@@ -89,13 +89,16 @@ public class Controller implements Initializable {
             String msg = args[0].toString();
             if (msg.startsWith("/")) {
                 if (msg.startsWith("/clients ")) {
-                    String[] tokens = msg.split("\\s");
+                    String[] clients = msg.substring(9).split("\\s");
                     Platform.runLater(() -> {
                         clientsList.getItems().clear();
-                        for (int i = 1; i < tokens.length; i++) {
-                            clientsList.getItems().add(tokens[i]);
+                        for (String client : clients) {
+                            clientsList.getItems().add(client);
                         }
                     });
+                }
+                if (msg.startsWith("/changenick ")) {
+                    nickname = msg.split("\\s")[1];
                 }
             } else {
                 textArea.appendText(msg + "\n");

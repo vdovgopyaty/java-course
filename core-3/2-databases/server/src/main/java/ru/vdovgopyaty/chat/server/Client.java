@@ -49,6 +49,21 @@ public class Client {
                                 String[] tokens = msg.split("\\s", 3);
                                 server.privateMsg(this, tokens[1], tokens[2]);
                             }
+                            if (msg.startsWith("/changenick ")) {
+                                String newNickname = msg.split("\\s", 2)[1];
+                                if (newNickname.contains(" ")) {
+                                    sendMsg("Nickname cannot contain spaces");
+                                    continue;
+                                }
+                                if (server.getAuthService().changeNickname(this.nickname, newNickname)) {
+                                    this.nickname = newNickname;
+                                    sendMsg("/changenick " + nickname);
+                                    sendMsg("Nickname has been changed");
+                                    server.broadcastClientsList();
+                                } else {
+                                    sendMsg("Nickname is already taken");
+                                }
+                            }
                         } else {
                             server.broadcastMsg(nickname + ": " + msg);
                         }
