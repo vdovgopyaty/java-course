@@ -54,7 +54,7 @@ public class Server {
         }
         for (Client client : clients) {
             if (client.getNickname().equals(receiverNickname)) {
-                client.sendMsg(sender.getNickname() + " whispered" + ": " + msg);
+                client.sendMsg(sender.getNickname() + " whispers" + ": " + msg);
                 sender.sendMsg("You whisper to " + receiverNickname + ": " + msg);
                 return;
             }

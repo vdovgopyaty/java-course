@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,8 +27,10 @@ public class Controller implements Initializable {
     ListView<String> clientsList;
 
     private final String YOURSELF_LABEL = " (You)";
+    private final int RECOVERABLE_MESSAGE_QUANTITY = 100;
     private boolean authentificated;
     private String nickname;
+    private File messageHistoryFile;
 
     public void setAuthenticated(boolean authentificated) {
         this.authentificated = authentificated;
@@ -64,10 +67,13 @@ public class Controller implements Initializable {
     }
 
     public void sendMsg() {
-        if (Network.sendMsg(msgField.getText())) {
-            msgField.clear();
-            msgField.requestFocus();
+        if (!msgField.getText().equals("")) {
+            if (Network.sendMsg(msgField.getText())) {
+                msgField.clear();
+                msgField.requestFocus();
+            }
         }
+        msgField.requestFocus();
     }
 
     public void showAlert(String msg) {
@@ -85,6 +91,35 @@ public class Controller implements Initializable {
         Network.setCallOnAuthenticated(args -> {
             setAuthenticated(true);
             nickname = args[0].toString();
+            int lineNumber = 0;
+
+            if (setMessageHistoryFile().exists()) {
+                try (FileReader fr = new FileReader(messageHistoryFile)) {
+                    LineNumberReader lnr = new LineNumberReader(fr);
+                    while (lnr.readLine() != null) {
+                        lineNumber++;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try (BufferedReader br = new BufferedReader(new FileReader(messageHistoryFile))) {
+                    for (int i = 0; i < lineNumber; i++) {
+                        String line = br.readLine();
+                        if (i >= lineNumber - RECOVERABLE_MESSAGE_QUANTITY) {
+                            textArea.appendText(line + "\n");
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    messageHistoryFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
         Network.setCallOnMsgReceived(args -> {
@@ -105,18 +140,28 @@ public class Controller implements Initializable {
                 if (msg.startsWith("/changenick:")) {
                     if (msg.startsWith("/changenick:error ")) {
                         String errorText = msg.split("\\s", 2)[1];
-                        textArea.appendText(errorText);
+                        textArea.appendText(errorText + "\n");
                         return;
                     }
                     if (msg.startsWith("/changenick:succeeded ")) {
                         nickname = msg.split("\\s")[1];
-                        textArea.appendText("Nickname has been changed");
+                        textArea.appendText("Nickname has been changed\n");
+                        messageHistoryFile.renameTo(setMessageHistoryFile());
                     }
                 }
             } else {
                 textArea.appendText(msg + "\n");
-                System.out.println(msg);
+                try (FileWriter fw = new FileWriter(messageHistoryFile, true)) {
+                    fw.append(msg + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
+    }
+
+    private File setMessageHistoryFile() {
+        messageHistoryFile = new File("client/data/nickname=" + nickname + ".cmh");
+        return messageHistoryFile;
     }
 }

@@ -26,7 +26,6 @@ public class Client {
                 try {
                     while (true) {
                         String msg = in.readUTF();
-                        // /auth login1 pass1
                         if (msg.startsWith("/auth ")) {
                             String[] tokens = msg.split("\\s");
                             String nickname = server.getAuthService().getNickname(tokens[1], tokens[2]);

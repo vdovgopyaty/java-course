@@ -11,14 +11,14 @@
 <?import javafx.scene.control.ListView?>
 <VBox fx:controller="ru.vdovgopyaty.chat.client.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
     <HBox fx:id="authPanel">
-        <TextField HBox.hgrow="ALWAYS" fx:id="loginField" promptText="Login" />
-        <PasswordField HBox.hgrow="ALWAYS" fx:id="passField" promptText="Password" onAction="#sendAuth" />
-        <Button HBox.hgrow="ALWAYS" text="Connect" onAction="#sendAuth" />
+        <TextField HBox.hgrow="ALWAYS" fx:id="loginField" promptText="Login"/>
+        <PasswordField HBox.hgrow="ALWAYS" fx:id="passField" promptText="Password" onAction="#sendAuth"/>
+        <Button HBox.hgrow="ALWAYS" text="Connect" onAction="#sendAuth"/>
     </HBox>
 
     <HBox VBox.vgrow="ALWAYS">
         <TextArea HBox.hgrow="ALWAYS" fx:id="textArea" editable="false"/>
-        <ListView fx:id="clientsList" minWidth="200" maxWidth="200" />
+        <ListView fx:id="clientsList" minWidth="200" maxWidth="200"/>
     </HBox>
 
     <HBox fx:id="msgPanel">
