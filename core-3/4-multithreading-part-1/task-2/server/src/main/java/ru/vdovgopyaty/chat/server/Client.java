@@ -22,7 +22,7 @@ public class Client {
             this.socket = socket;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
-            new Thread(() -> {
+            server.getClientsExecutorService().execute(() -> {
                 try {
                     while (true) {
                         String msg = in.readUTF();
@@ -73,7 +73,7 @@ public class Client {
                 } finally {
                     Client.this.disconnect();
                 }
-            }).start();
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
