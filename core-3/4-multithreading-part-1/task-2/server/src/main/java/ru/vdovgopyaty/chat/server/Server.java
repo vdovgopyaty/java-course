@@ -36,6 +36,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            clientsExecutorService.shutdown();
             Database.disconnect();
             System.out.println("Server closed");
         }
