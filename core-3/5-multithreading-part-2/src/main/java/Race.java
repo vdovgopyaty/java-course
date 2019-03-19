@@ -2,13 +2,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Race {
 
     private ArrayList<Stage> stages;
     private ArrayList<Car> participants;
     private HashMap<SignalType, Signal> signals;
-    private Car winner;
+    private AtomicReference<Car> winner;
 
     public Race(Stage[] stages, int participantQuantity) {
         Car[] cars = new Car[participantQuantity];
@@ -19,6 +20,7 @@ public class Race {
         this.stages = new ArrayList<>(Arrays.asList(stages));
         this.participants = new ArrayList<>(Arrays.asList(cars));
         this.signals = new HashMap<>();
+        this.winner = new AtomicReference<>();
 
         signals.put(SignalType.START, new Signal("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!",
                 participantQuantity));
@@ -38,13 +40,12 @@ public class Race {
         return signals.get(SignalType.FINISH).getBarrier();
     }
 
-    public synchronized boolean setWinner(Car winner) {
-        if (this.winner == null) {
-            this.winner = winner;
+    public boolean setWinner(Car winner) {
+        boolean result = this.winner.compareAndSet(null, winner);
+        if (result) {
             System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> " + winner.getName() + " победил!!!");
-            return true;
         }
-        return false;
+        return result;
     }
 
     public void start() {
