@@ -8,6 +8,7 @@ public class Race {
     private ArrayList<Stage> stages;
     private ArrayList<Car> participants;
     private HashMap<SignalType, Signal> signals;
+    private Car winner;
 
     public Race(Stage[] stages, int participantQuantity) {
         Car[] cars = new Car[participantQuantity];
@@ -35,6 +36,15 @@ public class Race {
 
     public CyclicBarrier getFinishSignal() {
         return signals.get(SignalType.FINISH).getBarrier();
+    }
+
+    public synchronized boolean setWinner(Car winner) {
+        if (this.winner == null) {
+            this.winner = winner;
+            System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> " + winner.getName() + " победил!!!");
+            return true;
+        }
+        return false;
     }
 
     public void start() {
