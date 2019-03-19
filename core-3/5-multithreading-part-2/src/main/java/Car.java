@@ -1,3 +1,5 @@
+import java.util.concurrent.BrokenBarrierException;
+
 public class Car implements Runnable {
 
     private static int CARS_COUNT;
@@ -10,6 +12,12 @@ public class Car implements Runnable {
     private int speed;
     private String name;
 
+    public Car(int speed) {
+        this.speed = speed;
+        CARS_COUNT++;
+        this.name = "Участник #" + CARS_COUNT;
+    }
+
     public String getName() {
         return name;
     }
@@ -18,11 +26,8 @@ public class Car implements Runnable {
         return speed;
     }
 
-    public Car(Race race, int speed) {
+    public void addToRace(Race race) {
         this.race = race;
-        this.speed = speed;
-        CARS_COUNT++;
-        this.name = "Участник #" + CARS_COUNT;
     }
 
     @Override
@@ -30,12 +35,21 @@ public class Car implements Runnable {
         try {
             System.out.println(this.name + " готовится");
             Thread.sleep(500 + (int) (Math.random() * 800));
+
             System.out.println(this.name + " готов");
-        } catch (Exception e) {
+            race.getStartSignal().await();
+        } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
         }
+
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
+        }
+
+        try {
+            race.getFinishSignal().await();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            e.printStackTrace();
         }
     }
 }
