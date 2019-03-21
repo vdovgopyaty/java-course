@@ -37,9 +37,13 @@ public class Server {
         }
     }
 
-    public void broadcastMsg(String msg) {
+    public void broadcastMsg(String senderNickname, String msg) {
         for (Client client : clients) {
-            client.sendMsg(msg);
+            if (client.getNickname().equals(senderNickname)) {
+                client.sendMsg("You: " + msg);
+            } else {
+                client.sendMsg(senderNickname + ": " + msg);
+            }
         }
     }
 
@@ -50,8 +54,8 @@ public class Server {
         }
         for (Client client : clients) {
             if (client.getNickname().equals(receiverNickname)) {
-                client.sendMsg(sender.getNickname() + " whispered" + ": " + msg);
-                sender.sendMsg("Whisper to " + receiverNickname + ": " + msg);
+                client.sendMsg(sender.getNickname() + " whispers" + ": " + msg);
+                sender.sendMsg("You whisper to " + receiverNickname + ": " + msg);
                 return;
             }
         }
