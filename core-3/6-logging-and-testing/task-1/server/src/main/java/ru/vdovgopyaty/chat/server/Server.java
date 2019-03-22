@@ -4,40 +4,46 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
     private Vector<Client> clients;
     private AuthService authService;
+    private static final Logger logger = Logger.getLogger(Server.class.getName());
 
     public AuthService getAuthService() {
         return authService;
     }
 
     public Server() {
+        logger.setLevel(Level.ALL);
+
         clients = new Vector<>();
 
         if (!Database.connect()) {
-            throw new RuntimeException("Unable to connect to the database");
+            logger.log(Level.SEVERE, "Unable to connect to the database");
+            throw new RuntimeException();
         }
 
         authService = new DatabaseAuthService();
 
         try (ServerSocket serverSocket = new ServerSocket(8080)) {
-            System.out.println("Server is listening on port " + serverSocket.getLocalPort() + "...");
+            logger.log(Level.INFO, "Server is listening on port " + serverSocket.getLocalPort() + "...");
             while (true) {
                 Socket socket = serverSocket.accept();
                 new Client(this, socket);
-                System.out.println("Client connected");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage(), e);
         } finally {
             Database.disconnect();
-            System.out.println("Server closed");
+            logger.log(Level.INFO, "Server closed");
         }
     }
 
     public void broadcastMsg(String senderNickname, String msg) {
+        logger.log(Level.FINEST,"User " + senderNickname + " sent a message");
         for (Client client : clients) {
             if (client.getNickname().equals(senderNickname)) {
                 client.sendMsg("You: " + msg);
@@ -50,26 +56,32 @@ public class Server {
     public void privateMsg(Client sender, String receiverNickname, String msg) {
         if (sender.getNickname().equals(receiverNickname)) {
             sender.sendMsg("Note: " + msg);
+            logger.log(Level.FINEST,"User " + sender.getNickname() + " wrote a note");
             return;
         }
         for (Client client : clients) {
             if (client.getNickname().equals(receiverNickname)) {
                 client.sendMsg(sender.getNickname() + " whispers" + ": " + msg);
                 sender.sendMsg("You whisper to " + receiverNickname + ": " + msg);
+                logger.log(Level.FINEST,"User " + sender.getNickname() + " sent a private message");
                 return;
             }
         }
         sender.sendMsg("Client " + receiverNickname + " not found");
+        logger.log(Level.FINEST,
+                "User " + sender.getNickname() + " tried to send a private message to a non-existent client");
     }
 
     public void subscribe(Client Client) {
         clients.add(Client);
         broadcastClientsList();
+        logger.log(Level.FINE, "User " + Client.getNickname() + " connected");
     }
 
     public void unsubscribe(Client Client) {
         clients.remove(Client);
         broadcastClientsList();
+        logger.log(Level.FINE, "User " + Client.getNickname() + " disconnected");
     }
 
     public boolean isNickBusy(String nickname) {
