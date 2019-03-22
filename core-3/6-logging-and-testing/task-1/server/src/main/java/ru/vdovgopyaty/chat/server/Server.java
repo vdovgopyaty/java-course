@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,12 +20,16 @@ public class Server {
 
     public Server() {
         logger.setLevel(Level.ALL);
+        Handler handler = new ConsoleHandler();
+        handler.setLevel(Level.ALL);
+        logger.addHandler(handler);
 
         clients = new Vector<>();
 
         if (!Database.connect()) {
-            logger.log(Level.SEVERE, "Unable to connect to the database");
-            throw new RuntimeException();
+            RuntimeException e = new RuntimeException("Unable to connect to the database");
+            logger.log(Level.SEVERE, e.getMessage(), e);
+            throw e;
         }
 
         authService = new DatabaseAuthService();

@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +23,10 @@ public class Client {
 
     public Client(Server server, Socket socket) {
         logger.setLevel(Level.ALL);
+        Handler handler = new ConsoleHandler();
+        handler.setLevel(Level.ALL);
+        logger.addHandler(handler);
+
         try {
             this.server = server;
             this.socket = socket;
