@@ -20,4 +20,4 @@
 4. Multithreading (Part 1)
 5. Multithreading (Part 2)
 6. Logging and Testing
-7. Reflection API and annotations
+7. Reflection API and Annotations
