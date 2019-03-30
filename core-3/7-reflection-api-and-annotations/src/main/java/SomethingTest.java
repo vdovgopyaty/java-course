@@ -6,26 +6,31 @@ public class SomethingTest {
 
     @BeforeSuite
     public void beforeSuite() {
-        System.out.println("BeforeSuite");
+        System.out.println("Before Suite");
     }
 
     @Test(priority = 3)
     public void test3() {
-        System.out.println("Test3");
+        System.out.println("Test 3");
     }
 
     @Test(priority = 1)
     public void test1() {
-        System.out.println("Test1");
+        System.out.println("Test 1");
     }
 
     @Test(priority = 2)
-    public void test2() {
-        System.out.println("Test2");
+    public void test2A() {
+        System.out.println("Test 2A");
+    }
+
+    @Test(priority = 2)
+    public void test2B() {
+        System.out.println("Test 2B");
     }
 
     @AfterSuite
     public void afterSuite() {
-        System.out.println("AfterSuite");
+        System.out.println("After Suite");
     }
 }
