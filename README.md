@@ -21,3 +21,15 @@
 5. Multithreading (Part 2)
 6. Logging and Testing
 7. Reflection API and Annotations
+
+
+## [Java Data Structures and Algorithms](data-structures/)
+
+1. Introduction to Algorithms
+2. Arrays and Sorting
+3. Stack and Queue
+4. Linked Lists
+5. Recursion
+6. Trees
+7. Graphs
+8. Hashtables
