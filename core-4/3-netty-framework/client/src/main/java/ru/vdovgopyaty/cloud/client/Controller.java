@@ -6,7 +6,6 @@ import ru.vdovgopyaty.cloud.common.Message;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -14,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
@@ -23,11 +23,12 @@ public class Controller implements Initializable {
     private final String STORAGE_FOLDER = "clientStorage";
 
     public TextField fileNameInput;
-    public TableView fileTable;
-    public TableColumn fileNameColumn;
-    public TableColumn fileSizeColumn;
-    public TableColumn localFlagColumn;
-    public TableColumn remoteFlagColumn;
+    public TableView<File> fileTable;
+    public TableColumn<File, String> fileNameColumn;
+    public TableColumn<File, Long> fileSizeColumn;
+    public TableColumn<File, Boolean> localFlagColumn;
+    public TableColumn<File, Boolean> remoteFlagColumn;
+    public TextField fileNameUploadInput;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -51,6 +52,11 @@ public class Controller implements Initializable {
         });
         messageListeningThread.setDaemon(true);
         messageListeningThread.start();
+
+        fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        fileSizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
+        localFlagColumn.setCellValueFactory(new PropertyValueFactory<>("local"));
+        remoteFlagColumn.setCellValueFactory(new PropertyValueFactory<>("remote"));
         refreshLocalFileList();
     }
 
@@ -64,17 +70,17 @@ public class Controller implements Initializable {
     public void refreshLocalFileList() {
         render(() -> {
             try {
-                fileTable = new TableView();
-
-                fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-                fileSizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
-                localFlagColumn.setCellValueFactory(new PropertyValueFactory<>("local"));
-                remoteFlagColumn.setCellValueFactory(new PropertyValueFactory<>("remote"));
-                fileTable.getColumns().addAll(fileNameColumn, fileSizeColumn, localFlagColumn, remoteFlagColumn);
-
-//                fileTable.getItems().clear();
+                fileTable.getItems().clear();
                 Files.list(Paths.get(STORAGE_FOLDER))
-                        .map(path -> new File(path.getFileName().toString(), 73244, true, false)) // TODO
+                        .map(path -> {
+                            long size = 0;
+                            try {
+                                size = Files.size(path);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return new File(path.getFileName().toString(), size, true, false);
+                        }) // TODO
                         .forEach(file -> fileTable.getItems().add(file));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -87,6 +93,20 @@ public class Controller implements Initializable {
             r.run();
         } else {
             Platform.runLater(r);
+        }
+    }
+
+    public void uploadFile(ActionEvent actionEvent) {
+        if (fileNameUploadInput.getLength() > 0) {
+            Path path = Paths.get(STORAGE_FOLDER + "/" + fileNameUploadInput.getText());
+
+            try {
+                Network.send(new FileMessage(path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            fileNameUploadInput.clear();
         }
     }
 }
