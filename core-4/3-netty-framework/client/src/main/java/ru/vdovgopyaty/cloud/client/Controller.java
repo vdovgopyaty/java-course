@@ -1,14 +1,15 @@
 package ru.vdovgopyaty.cloud.client;
 
+import ru.vdovgopyaty.cloud.common.FileMessage;
+import ru.vdovgopyaty.cloud.common.FileRequest;
+import ru.vdovgopyaty.cloud.common.Message;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import ru.vdovgopyaty.cloud.common.FileMessage;
-import ru.vdovgopyaty.cloud.common.FileRequest;
-import ru.vdovgopyaty.cloud.common.Message;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,14 +22,12 @@ public class Controller implements Initializable {
 
     private final String STORAGE_FOLDER = "clientStorage";
 
-    @FXML
-    public VBox rootNode;
-
-    @FXML
     public TextField fileNameInput;
-
-    @FXML
-    public ListView fileList;
+    public TableView fileTable;
+    public TableColumn fileNameColumn;
+    public TableColumn fileSizeColumn;
+    public TableColumn localFlagColumn;
+    public TableColumn remoteFlagColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -65,10 +64,18 @@ public class Controller implements Initializable {
     public void refreshLocalFileList() {
         render(() -> {
             try {
-                fileList.getItems().clear();
+                fileTable = new TableView();
+
+                fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+                fileSizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
+                localFlagColumn.setCellValueFactory(new PropertyValueFactory<>("local"));
+                remoteFlagColumn.setCellValueFactory(new PropertyValueFactory<>("remote"));
+                fileTable.getColumns().addAll(fileNameColumn, fileSizeColumn, localFlagColumn, remoteFlagColumn);
+
+//                fileTable.getItems().clear();
                 Files.list(Paths.get(STORAGE_FOLDER))
-                        .map(p -> p.getFileName().toString())
-                        .forEach(o -> fileList.getItems().add(o));
+                        .map(path -> new File(path.getFileName().toString(), 73244, true, false)) // TODO
+                        .forEach(file -> fileTable.getItems().add(file));
             } catch (IOException e) {
                 e.printStackTrace();
             }

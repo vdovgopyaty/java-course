@@ -1,22 +1,31 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
 
-<VBox fx:id="rootNode" fx:controller="ru.vdovgopyaty.cloud.client.Controller" xmlns:fx="http://javafx.com/fxml"
-      alignment="CENTER" prefHeight="400.0" prefWidth="400.0"
-      style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);">
-
-    <HBox>
-        <TextField fx:id="fileNameInput" focusTraversable="false" promptText="Type the file name" HBox.hgrow="ALWAYS"/>
-        <Button onAction="#downloadFile" text="Download"/>
-    </HBox>
-    <ListView fx:id="fileList" VBox.vgrow="ALWAYS"/>
-</VBox>
+<GridPane alignment="CENTER" hgap="10.0" vgap="10.0" prefHeight="400.0" prefWidth="402.0"
+          xmlns:fx="http://javafx.com/fxml" fx:controller="ru.vdovgopyaty.cloud.client.Controller">
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
+    <VBox alignment="CENTER">
+        <HBox>
+            <TextField fx:id="fileNameInput" focusTraversable="false" promptText="Type the file name" HBox.hgrow="ALWAYS"/>
+            <Button onAction="#downloadFile" text="Download"/>
+        </HBox>
+        <HBox>
+            <TableView fx:id="fileTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="fileNameColumn" text="File name" prefWidth="160"></TableColumn>
+                    <TableColumn fx:id="fileSizeColumn" text="Size" prefWidth="100"></TableColumn>
+                    <TableColumn fx:id="localFlagColumn" text="Local" prefWidth="60"></TableColumn>
+                    <TableColumn fx:id="remoteFlagColumn" text="Remote" prefWidth="60"></TableColumn>
+                </columns>
+            </TableView>
+        </HBox>
+    </VBox>
+</GridPane>
