@@ -8,12 +8,15 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ListView?>
 
-<VBox fx:controller="ru.vdovgopyaty.cloud.client.Controller"
-      xmlns:fx="http://javafx.com/fxml" alignment="center">
-    <TextArea fx:id="textArea" VBox.vgrow="ALWAYS" editable="false"/>
+<VBox fx:id="rootNode" fx:controller="ru.vdovgopyaty.cloud.client.Controller" xmlns:fx="http://javafx.com/fxml"
+      alignment="CENTER" prefHeight="400.0" prefWidth="400.0"
+      style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);">
+
     <HBox>
-        <TextField fx:id="textField" onAction="#sendMessage" HBox.hgrow="ALWAYS" promptText="Message..."/>
-        <Button text="Send" onAction="#sendMessage"/>
+        <TextField fx:id="fileNameInput" focusTraversable="false" promptText="Type the file name" HBox.hgrow="ALWAYS"/>
+        <Button onAction="#downloadFile" text="Download"/>
     </HBox>
+    <ListView fx:id="fileList" VBox.vgrow="ALWAYS"/>
 </VBox>
