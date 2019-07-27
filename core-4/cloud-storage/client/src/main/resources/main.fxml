@@ -1,41 +1,41 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.geometry.Insets?>
 
-<GridPane alignment="CENTER" hgap="10.0" vgap="10.0" prefHeight="400.0" prefWidth="402.0"
-          xmlns:fx="http://javafx.com/fxml" fx:controller="ru.vdovgopyaty.cloud.client.Controller">
-    <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-    </padding>
-    <VBox alignment="CENTER">
-        <HBox>
-            <Button onAction="#uploadFile" text="Upload new file"/>
-        </HBox>
-        <HBox>
-            <padding>
-                <Insets top="10.0"/>
-            </padding>
-            <TableView fx:id="fileTable" VBox.vgrow="ALWAYS">
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="ru.vdovgopyaty.cloud.client.Controller"
+          stylesheets="common.css" id="body">
+    <VBox id="container">
+        <HBox id="tablePanel">
+            <TableView fx:id="fileTable">
                 <columns>
-                    <TableColumn fx:id="fileNameColumn" text="File name" prefWidth="160"/>
-                    <TableColumn fx:id="fileSizeColumn" text="Size" prefWidth="100"/>
-                    <TableColumn fx:id="localFlagColumn" text="Local" prefWidth="60"/>
-                    <TableColumn fx:id="remoteFlagColumn" text="Remote" prefWidth="60"/>
+                    <TableColumn fx:id="fileNameColumn" text="File name"/>
+                    <TableColumn fx:id="fileSizeColumn" text="Size"/>
+                    <TableColumn fx:id="localFlagColumn" text="Local"/>
+                    <TableColumn fx:id="remoteFlagColumn" text="Remote"/>
                 </columns>
             </TableView>
         </HBox>
-        <HBox>
-            <padding>
-                <Insets top="10.0"/>
-            </padding>
-            <Button fx:id="downloadFile" onAction="#downloadFile" text="Download"/>
-            <Button fx:id="deleteLocalFile" onAction="#deleteLocalFile" text="Keep remote only"/>
-            <Button fx:id="deleteFile" onAction="#deleteFile" text="Delete everywhere"/>
+        <HBox id="bottomPanel">
+            <VBox>
+                <Button onAction="#uploadFile" text="Upload new file"/>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS"/>
+            <VBox>
+                <HBox id="tableButtonsPanel">
+                    <VBox styleClass="tableButton">
+                        <Button fx:id="downloadFile" onAction="#downloadFile" text="Download"/>
+                    </VBox>
+                    <VBox styleClass="tableButton">
+                        <Button fx:id="deleteLocalFile" onAction="#deleteLocalFile" text="Keep remote only"/>
+                    </VBox>
+                    <VBox styleClass="tableButton">
+                        <Button fx:id="deleteFile" onAction="#deleteFile" text="Delete everywhere"/>
+                    </VBox>
+                </HBox>
+            </VBox>
         </HBox>
     </VBox>
 </GridPane>

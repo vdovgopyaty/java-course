@@ -1,0 +1,20 @@
+#body {
+    -fx-pref-height: 400;
+    -fx-pref-width: 562;
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-padding: 10;
+    -fx-alignment: CENTER;
+}
+
+#container { -fx-alignment: CENTER; }
+
+#fileTable { -fx-pref-width: 540; }
+#fileNameColumn { -fx-pref-width: 320; }
+#fileSizeColumn { -fx-pref-width: 100; }
+#localFlagColumn { -fx-pref-width: 60; -fx-alignment: CENTER; }
+#remoteFlagColumn { -fx-pref-width: 60; -fx-alignment: CENTER; }
+
+#bottomPanel { -fx-padding: 10 0 0 0; }
+
+.tableButton { -fx-padding: 0 0 0 10; }

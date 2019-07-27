@@ -30,8 +30,19 @@ public class FileInfo implements Serializable {
         return name;
     }
 
-    public String getStringSize() {
-        return size + " B";
+    public String getSize() {
+        int sizeDigits = (int) (Math.log10(size) + 1);
+
+        if (sizeDigits <= 3) {
+            return size + " B";
+        }
+        if (sizeDigits <= 6) {
+            return getSizeInKBytes() + " KB";
+        }
+        if (sizeDigits <= 9) {
+            return getSizeInMBytes() + " MB";
+        }
+        return getSizeInGBytes() + " GB";
     }
 
     public String getLocal() {
@@ -42,8 +53,20 @@ public class FileInfo implements Serializable {
         return remote ? "+" : "-";
     }
 
-    public long getSize() {
+    public long getSizeInBytes() {
         return size;
+    }
+
+    public double getSizeInKBytes() {
+        return Math.round((double) size / 1024 * 10) / 10.0;
+    }
+
+    public double getSizeInMBytes() {
+        return Math.round(getSizeInKBytes() / 1024 * 10) / 10.0;
+    }
+
+    public double getSizeInGBytes() {
+        return Math.round(getSizeInMBytes() / 1024 * 10) / 10.0;
     }
 
     public void setLocal(boolean value) {

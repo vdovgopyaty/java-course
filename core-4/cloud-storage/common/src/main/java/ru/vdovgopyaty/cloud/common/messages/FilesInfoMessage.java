@@ -16,14 +16,14 @@ public class FilesInfoMessage extends Message {
     public FilesInfoMessage(FileInfo file) {
         this.files = new ArrayList<>();
         this.files.add(file);
-        this.size = file.getSize();
+        this.size = file.getSizeInBytes();
     }
 
     public FilesInfoMessage(ArrayList<FileInfo> files) {
         this.files = files;
         long size = 0;
         for (FileInfo file : files) {
-            size += file.getSize();
+            size += file.getSizeInBytes();
         }
         this.size = size;
     }
@@ -38,6 +38,6 @@ public class FilesInfoMessage extends Message {
 
     public void add(FileInfo fileInfo) {
         this.files.add(fileInfo);
-        this.size += fileInfo.getSize();
+        this.size += fileInfo.getSizeInBytes();
     }
 }

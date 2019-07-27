@@ -37,26 +37,16 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                     ctx.writeAndFlush(fileMessage);
                 }
             } else if (msg instanceof FilesInfoRequest) {
-                FilesInfoMessage filesInfoMessage = new FilesInfoMessage();
-                Files.list(Paths.get(STORAGE_FOLDER))
-                        .map(path -> {
-                            FileInfo fileInfo = null;
-                            try {
-                                fileInfo = new FileInfo(path.getFileName().toString(), Files.size(path));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            return fileInfo;
-                        })
-                        .forEach(filesInfoMessage::add);
-                ctx.writeAndFlush(filesInfoMessage);
+                sendFilesInfo(ctx);
             } else if (msg instanceof DeleteFileMessage) {
                 DeleteFileMessage deleteFileMessage = (DeleteFileMessage) msg;
                 Files.delete(Paths.get(STORAGE_FOLDER + "/" + deleteFileMessage.getName()));
+                sendFilesInfo(ctx);
             } else if (msg instanceof FileMessage) {
                 FileMessage fileMessage = (FileMessage) msg;
                 Files.write(Paths.get(STORAGE_FOLDER + "/" + fileMessage.getName()), fileMessage.getData(),
                         StandardOpenOption.CREATE);
+                sendFilesInfo(ctx);
             } else {
                 System.out.printf("Server received wrong object!");
                 return;
@@ -75,5 +65,21 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
         ctx.close();
+    }
+
+    private void sendFilesInfo(ChannelHandlerContext ctx) throws IOException {
+        FilesInfoMessage filesInfoMessage = new FilesInfoMessage();
+        Files.list(Paths.get(STORAGE_FOLDER))
+                .map(path -> {
+                    FileInfo fileInfo = null;
+                    try {
+                        fileInfo = new FileInfo(path.getFileName().toString(), Files.size(path));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return fileInfo;
+                })
+                .forEach(filesInfoMessage::add);
+        ctx.writeAndFlush(filesInfoMessage);
     }
 }

@@ -30,13 +30,11 @@ public class Controller implements Initializable {
     private String focusFileName = "";
     private ArrayList<FileInfo> remoteFileList = new ArrayList<>();
 
-    public TextField fileNameInput;
     public TableView<FileInfo> fileTable;
     public TableColumn<FileInfo, String> fileNameColumn;
     public TableColumn<FileInfo, Long> fileSizeColumn;
     public TableColumn<FileInfo, Boolean> localFlagColumn;
     public TableColumn<FileInfo, Boolean> remoteFlagColumn;
-    public TextField fileNameUploadInput;
     public Button downloadFile;
     public Button deleteLocalFile;
     public Button deleteFile;
@@ -53,9 +51,8 @@ public class Controller implements Initializable {
                         FileMessage fileMessage = (FileMessage) msg;
                         Files.write(Paths.get(STORAGE_FOLDER + "/" + fileMessage.getName()), fileMessage.getData(),
                                 StandardOpenOption.CREATE);
-                        Network.send(new FilesInfoRequest());
-                    }
-                    if (msg instanceof FilesInfoMessage) {
+                        refreshLocalFileList();
+                    } else if (msg instanceof FilesInfoMessage) {
                         FilesInfoMessage filesInfoMessage = (FilesInfoMessage) msg;
                         refreshFileList(filesInfoMessage);
                     }
@@ -107,10 +104,10 @@ public class Controller implements Initializable {
         }
     }
 
-    public void refreshFileList(FilesInfoMessage filesInfoMessage) {
+    public void refreshFileList(FilesInfoMessage remoteFileList) {
         render(() -> {
-            remoteFileList.clear();
-            remoteFileList.addAll(filesInfoMessage.getFiles());
+            this.remoteFileList.clear();
+            this.remoteFileList.addAll(remoteFileList.getFiles());
             refreshLocalFileList();
         });
     }
@@ -170,7 +167,6 @@ public class Controller implements Initializable {
 
         try {
             Network.send(new FileMessage(newFilePath));
-            Network.send(new FilesInfoRequest());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -192,7 +188,6 @@ public class Controller implements Initializable {
         if (!focusFileName.equals("")) {
             Network.send(new DeleteFileMessage(focusFileName));
             deleteLocalFile(focusFileName);
-            Network.send(new FilesInfoRequest());
         }
     }
 }
