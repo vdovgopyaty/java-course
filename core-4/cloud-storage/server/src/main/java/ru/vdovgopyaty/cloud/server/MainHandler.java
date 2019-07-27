@@ -1,12 +1,13 @@
 package ru.vdovgopyaty.cloud.server;
 
-import ru.vdovgopyaty.cloud.common.FileMessage;
-import ru.vdovgopyaty.cloud.common.FileRequest;
+import ru.vdovgopyaty.cloud.common.FileInfo;
+import ru.vdovgopyaty.cloud.common.messages.*;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,6 +36,23 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                     FileMessage fileMessage = new FileMessage(path);
                     ctx.writeAndFlush(fileMessage);
                 }
+            } else if (msg instanceof FilesInfoRequest) {
+                FilesInfoMessage filesInfoMessage = new FilesInfoMessage();
+                Files.list(Paths.get(STORAGE_FOLDER))
+                        .map(path -> {
+                            FileInfo fileInfo = null;
+                            try {
+                                fileInfo = new FileInfo(path.getFileName().toString(), Files.size(path));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return fileInfo;
+                        })
+                        .forEach(filesInfoMessage::add);
+                ctx.writeAndFlush(filesInfoMessage);
+            } else if (msg instanceof DeleteFileMessage) {
+                DeleteFileMessage deleteFileMessage = (DeleteFileMessage) msg;
+                Files.delete(Paths.get(STORAGE_FOLDER + "/" + deleteFileMessage.getName()));
             } else if (msg instanceof FileMessage) {
                 FileMessage fileMessage = (FileMessage) msg;
                 Files.write(Paths.get(STORAGE_FOLDER + "/" + fileMessage.getName()), fileMessage.getData(),

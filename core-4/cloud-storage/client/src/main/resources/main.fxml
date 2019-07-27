@@ -10,10 +10,16 @@
 <GridPane alignment="CENTER" hgap="10.0" vgap="10.0" prefHeight="400.0" prefWidth="402.0"
           xmlns:fx="http://javafx.com/fxml" fx:controller="ru.vdovgopyaty.cloud.client.Controller">
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
     <VBox alignment="CENTER">
         <HBox>
+            <Button onAction="#uploadFile" text="Upload new file"/>
+        </HBox>
+        <HBox>
+            <padding>
+                <Insets top="10.0"/>
+            </padding>
             <TableView fx:id="fileTable" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="fileNameColumn" text="File name" prefWidth="160"/>
@@ -25,19 +31,11 @@
         </HBox>
         <HBox>
             <padding>
-                <Insets top="10.0" />
+                <Insets top="10.0"/>
             </padding>
-            <TextField fx:id="fileNameInput" focusTraversable="false" promptText="Type the file name to download"
-                       HBox.hgrow="ALWAYS"/>
-            <Button onAction="#downloadFile" text="Download"/>
-        </HBox>
-        <HBox>
-            <padding>
-                <Insets top="10.0" />
-            </padding>
-            <TextField fx:id="fileNameUploadInput" focusTraversable="false" promptText="Type the file name to upload"
-                       HBox.hgrow="ALWAYS"/>
-            <Button onAction="#uploadFile" text="Upload"/>
+            <Button fx:id="downloadFile" onAction="#downloadFile" text="Download"/>
+            <Button fx:id="deleteLocalFile" onAction="#deleteLocalFile" text="Keep remote only"/>
+            <Button fx:id="deleteFile" onAction="#deleteFile" text="Delete everywhere"/>
         </HBox>
     </VBox>
 </GridPane>

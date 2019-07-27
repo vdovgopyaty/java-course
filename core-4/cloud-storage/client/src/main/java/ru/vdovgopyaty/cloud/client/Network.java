@@ -2,7 +2,7 @@ package ru.vdovgopyaty.cloud.client;
 
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
-import ru.vdovgopyaty.cloud.common.Message;
+import ru.vdovgopyaty.cloud.common.messages.Message;
 
 import java.io.IOException;
 import java.net.Socket;

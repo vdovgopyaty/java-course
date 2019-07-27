@@ -16,6 +16,7 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 public class Server {
 
     private int port;
+    private final int MAX_FILE_SIZE = 100 * 1024 * 1024;
 
     public Server(int port) {
         this.port = port;
@@ -32,7 +33,7 @@ public class Server {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(
-                                    new ObjectDecoder(100 * 1024 * 1024,
+                                    new ObjectDecoder(MAX_FILE_SIZE,
                                             ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
                                     new MainHandler()
