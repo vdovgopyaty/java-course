@@ -1,17 +1,18 @@
 package ru.vdovgopyaty.cloud.client;
 
-import javafx.stage.Stage;
-import ru.vdovgopyaty.cloud.common.*;
-import ru.vdovgopyaty.cloud.common.messages.*;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.stage.FileChooser;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import ru.vdovgopyaty.cloud.common.FileInfo;
+import ru.vdovgopyaty.cloud.common.messages.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
