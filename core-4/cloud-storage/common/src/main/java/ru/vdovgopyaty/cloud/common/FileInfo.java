@@ -18,12 +18,8 @@ public class FileInfo implements Serializable {
         this.remote = remote;
     }
 
-    public FileInfo(String name, long size) {
-        this(name, size, false, true);
-    }
-
-    public FileInfo(Path path) throws IOException {
-        this(path.getFileName().toString(), Files.size(path));
+    public FileInfo(Path path, boolean local, boolean remote) throws IOException {
+        this(path.getFileName().toString(), Files.size(path), local, remote);
     }
 
     public String getName() {

@@ -7,6 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,7 +15,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
-    private final String STORAGE_FOLDER = "serverStorage";
+
+    private final String STORAGE_FOLDER = "serverStorage/";
+    private String userFolder;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -27,28 +30,38 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (msg == null) {
                 return;
             }
-            System.out.println("Type of got message: " + msg.getClass());
+            System.out.println("Received message: " + msg.getClass());
 
-            if (msg instanceof FileRequest) {
-                FileRequest fileRequest = (FileRequest) msg;
-                Path path = Paths.get("serverStorage/" + fileRequest.getName());
+            if (msg instanceof AuthMessage) {
+                AuthMessage authMessage = (AuthMessage) msg;
+                this.userFolder = STORAGE_FOLDER + authMessage.getLogin() + "/";
+                new File(userFolder).mkdirs();
+                sendFilesInfo(ctx);
+
+            } else if (msg instanceof GetFileMessage) {
+                GetFileMessage getFileMessage = (GetFileMessage) msg;
+                Path path = Paths.get(userFolder + getFileMessage.getName());
                 if (Files.exists(path)) {
                     FileMessage fileMessage = new FileMessage(path);
                     ctx.writeAndFlush(fileMessage);
                 }
-            } else if (msg instanceof FilesInfoRequest) {
+
+            } else if (msg instanceof GetFilesInfoMessage) {
                 sendFilesInfo(ctx);
+
             } else if (msg instanceof DeleteFileMessage) {
                 DeleteFileMessage deleteFileMessage = (DeleteFileMessage) msg;
-                Files.delete(Paths.get(STORAGE_FOLDER + "/" + deleteFileMessage.getName()));
+                Files.delete(Paths.get(userFolder + deleteFileMessage.getName()));
                 sendFilesInfo(ctx);
+
             } else if (msg instanceof FileMessage) {
                 FileMessage fileMessage = (FileMessage) msg;
-                Files.write(Paths.get(STORAGE_FOLDER + "/" + fileMessage.getName()), fileMessage.getData(),
+                Files.write(Paths.get(userFolder + fileMessage.getName()), fileMessage.getData(),
                         StandardOpenOption.CREATE);
                 sendFilesInfo(ctx);
+
             } else {
-                System.out.printf("Server received wrong object!");
+                System.out.println("Server received wrong object!");
                 return;
             }
         } finally {
@@ -69,11 +82,11 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
     private void sendFilesInfo(ChannelHandlerContext ctx) throws IOException {
         FilesInfoMessage filesInfoMessage = new FilesInfoMessage();
-        Files.list(Paths.get(STORAGE_FOLDER))
+        Files.list(Paths.get(userFolder))
                 .map(path -> {
                     FileInfo fileInfo = null;
                     try {
-                        fileInfo = new FileInfo(path.getFileName().toString(), Files.size(path));
+                        fileInfo = new FileInfo(path.getFileName().toString(), Files.size(path), false, true);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

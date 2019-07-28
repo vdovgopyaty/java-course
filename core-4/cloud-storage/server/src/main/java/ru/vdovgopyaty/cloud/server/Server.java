@@ -36,6 +36,7 @@ public class Server {
                                     new ObjectDecoder(MAX_FILE_SIZE,
                                             ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
+                                    new AuthHandler(new SimpleAuthService()),
                                     new MainHandler()
                             );
                         }

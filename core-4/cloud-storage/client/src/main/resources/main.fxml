@@ -4,10 +4,27 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.text.Text?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="ru.vdovgopyaty.cloud.client.Controller"
           stylesheets="common.css" id="body">
-    <VBox id="container">
+    <VBox fx:id="authScreen">
+        <HBox styleClass="authPanelElement">
+            <TextField fx:id="loginField" HBox.hgrow="ALWAYS" promptText="Login"/>
+        </HBox>
+        <HBox styleClass="authPanelElement">
+            <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" promptText="Password"/>
+        </HBox>
+        <HBox fx:id="accessDeniedNotice" styleClass="authPanelElement">
+            <Text>Invalid login or password</Text>
+        </HBox>
+        <HBox styleClass="authPanelElement">
+            <Button text="Sign in" onAction="#signIn"/>
+        </HBox>
+    </VBox>
+    <VBox fx:id="mainScreen">
         <HBox id="tablePanel">
             <TableView fx:id="fileTable">
                 <columns>
