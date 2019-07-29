@@ -180,6 +180,7 @@ public class Controller implements Initializable {
                     } else if (msg instanceof AccessAllowedMessage) {
                         AccessAllowedMessage accessAllowedMessage = (AccessAllowedMessage) msg;
                         Network.setUserToken(accessAllowedMessage.getToken());
+                        Network.setUserId(accessAllowedMessage.getId());
                         System.out.println("User token: " + accessAllowedMessage.getToken());
                         new File(userFolder).mkdirs();
                         showMainScreen();

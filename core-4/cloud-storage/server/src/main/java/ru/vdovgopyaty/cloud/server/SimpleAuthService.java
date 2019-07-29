@@ -6,34 +6,39 @@ import java.util.UUID;
 
 public class SimpleAuthService implements AuthService {
 
-    private class UserData {
+    private class User {
+        private int id;
         private String login;
         private String password;
         private String token;
 
-        UserData(String login, String password) {
+        User(int id, String login, String password) {
+            this.id = id;
             this.login = login;
             this.password = password;
             this.token = UUID.randomUUID().toString();
         }
+
+        User(String login, String password) {
+            this(users.size() + 1, login, password);
+        }
     }
 
-    private List<UserData> users;
+    private List<User> users;
 
     public SimpleAuthService() {
         this.users = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            users.add(new UserData("user" + i, "pass" + i));
+            users.add(new User("user" + i, "pass" + i));
         }
     }
 
     @Override
-    public String getToken(String login, String password) {
-        for (UserData user : users) {
+    public Integer getUserId(String login, String password) {
+        for (User user : users) {
             if (user.login.equals(login)) {
                 if (user.password.equals(password)) {
-                    user.token = UUID.randomUUID().toString();
-                    return user.token;
+                    return user.id;
                 }
                 return null;
             }
@@ -42,10 +47,21 @@ public class SimpleAuthService implements AuthService {
     }
 
     @Override
-    public String getLoginByToken(String token) {
-        for (UserData user : users) {
-            if (user.token.equals(token)) {
-                return user.login;
+    public String getToken(int id) {
+        for (User user : users) {
+            if (user.id == id) {
+                return user.token;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String createToken(int id) {
+        for (User user : users) {
+            if (user.id == id) {
+                user.token = UUID.randomUUID().toString();
+                return user.token;
             }
         }
         return null;

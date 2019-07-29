@@ -28,10 +28,15 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
 
         if (msg instanceof AuthMessage) {
             AuthMessage authMessage = (AuthMessage) msg;
-            String userToken = authService.getToken(authMessage.getLogin(), authMessage.getPassword());
-            if (userToken != null) {
+            Integer userId = authService.getUserId(authMessage.getLogin(), authMessage.getPassword());
+            if (userId != null) {
+                authMessage.setId(userId);
+                String userToken = authService.getToken(userId);
+                if (userToken == null) {
+                    userToken = authService.createToken(userId);
+                }
                 ctx.fireChannelRead(authMessage);
-                ctx.writeAndFlush(new AccessAllowedMessage(userToken));
+                ctx.writeAndFlush(new AccessAllowedMessage(userId, userToken));
                 System.out.println("Access allowed");
             } else {
                 ctx.writeAndFlush(new AccessDeniedMessage());
@@ -39,9 +44,8 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
             }
         } else {
             Message message = (Message) msg;
-            if (message.getToken() != null) {
-                String login = authService.getLoginByToken(message.getToken());
-                System.out.println("User token: " + message.getToken() + ", login: " + login);
+            if (message.getId() != null && message.getToken() != null) {
+                System.out.println("User id: " + message.getId() + ", token: " + message.getToken());
                 ctx.fireChannelRead(message);
             } else {
                 System.out.println("Client not authenticated!");

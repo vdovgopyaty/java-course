@@ -2,7 +2,9 @@ package ru.vdovgopyaty.cloud.server;
 
 public interface AuthService {
 
-    String getToken(String login, String password);
+    Integer getUserId(String login, String password);
 
-    String getLoginByToken(String token);
+    String getToken(int id);
+
+    String createToken(int id);
 }

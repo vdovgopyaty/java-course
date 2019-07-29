@@ -17,9 +17,11 @@ public class Server {
 
     private int port;
     private final int MAX_FILE_SIZE = 100 * 1024 * 1024;
+    private AuthService authService;
 
     public Server(int port) {
         this.port = port;
+        authService = new DatabaseAuthService();
     }
 
     public void run() throws Exception {
@@ -36,7 +38,7 @@ public class Server {
                                     new ObjectDecoder(MAX_FILE_SIZE,
                                             ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
-                                    new AuthHandler(new SimpleAuthService()),
+                                    new AuthHandler(authService),
                                     new MainHandler()
                             );
                         }

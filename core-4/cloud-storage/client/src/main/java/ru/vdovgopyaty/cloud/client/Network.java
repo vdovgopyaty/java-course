@@ -11,6 +11,7 @@ public class Network {
     private static Socket socket;
     private static ObjectEncoderOutputStream out;
     private static ObjectDecoderInputStream in;
+    private static int userId;
     private static String userToken;
 
     public static void start() {
@@ -43,6 +44,7 @@ public class Network {
 
     public static boolean send(Message message) {
         try {
+            message.setId(userId);
             message.setToken(userToken);
             out.writeObject(message);
             return true;
@@ -55,6 +57,10 @@ public class Network {
     public static Message messageListener() throws ClassNotFoundException, IOException {
         Object obj = in.readObject();
         return (Message) obj;
+    }
+
+    public static void setUserId(int id) {
+        userId = id;
     }
 
     public static void setUserToken(String token) {

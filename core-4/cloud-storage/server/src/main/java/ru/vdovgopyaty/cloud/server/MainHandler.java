@@ -34,7 +34,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
             if (msg instanceof AuthMessage) {
                 AuthMessage authMessage = (AuthMessage) msg;
-                this.userFolder = STORAGE_FOLDER + authMessage.getLogin() + "/";
+                this.userFolder = STORAGE_FOLDER + authMessage.getId() + "/";
                 new File(userFolder).mkdirs();
                 sendFilesInfo(ctx);
 
