@@ -12,13 +12,20 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import ru.vdovgopyaty.cloud.server.authservice.AuthService;
+import ru.vdovgopyaty.cloud.server.authservice.DatabaseAuthService;
+import ru.vdovgopyaty.cloud.server.handler.AuthHandler;
+import ru.vdovgopyaty.cloud.server.handler.MainHandler;
 
 public class Server {
 
     private int port;
+    private final int MAX_FILE_SIZE = 100 * 1024 * 1024;
+    private AuthService authService;
 
     public Server(int port) {
         this.port = port;
+        authService = new DatabaseAuthService();
     }
 
     public void run() throws Exception {
@@ -32,9 +39,10 @@ public class Server {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(
-                                    new ObjectDecoder(100 * 1024 * 1024,
+                                    new ObjectDecoder(MAX_FILE_SIZE,
                                             ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
+                                    new AuthHandler(authService),
                                     new MainHandler()
                             );
                         }

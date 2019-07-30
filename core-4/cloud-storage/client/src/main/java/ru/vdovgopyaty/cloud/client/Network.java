@@ -2,7 +2,7 @@ package ru.vdovgopyaty.cloud.client;
 
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
-import ru.vdovgopyaty.cloud.common.Message;
+import ru.vdovgopyaty.cloud.common.messages.Message;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -11,6 +11,8 @@ public class Network {
     private static Socket socket;
     private static ObjectEncoderOutputStream out;
     private static ObjectDecoderInputStream in;
+    private static int userId;
+    private static String userToken;
 
     public static void start() {
         try {
@@ -42,6 +44,8 @@ public class Network {
 
     public static boolean send(Message message) {
         try {
+            message.setId(userId);
+            message.setToken(userToken);
             out.writeObject(message);
             return true;
         } catch (IOException e) {
@@ -53,5 +57,13 @@ public class Network {
     public static Message messageListener() throws ClassNotFoundException, IOException {
         Object obj = in.readObject();
         return (Message) obj;
+    }
+
+    public static void setUserId(int id) {
+        userId = id;
+    }
+
+    public static void setUserToken(String token) {
+        userToken = token;
     }
 }

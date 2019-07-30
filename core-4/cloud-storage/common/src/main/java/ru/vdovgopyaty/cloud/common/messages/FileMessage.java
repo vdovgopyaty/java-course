@@ -1,4 +1,4 @@
-package ru.vdovgopyaty.cloud.common;
+package ru.vdovgopyaty.cloud.common.messages;
 
 import java.io.IOException;
 import java.nio.file.Files;
