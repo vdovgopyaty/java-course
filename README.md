@@ -21,6 +21,7 @@
 5. Multithreading (Part 2)
 6. Logging and Testing
 7. Reflection API and Annotations
+8. Project - Network Chat (Part 3)
 
 ## [Java Core 4](core-4/)
 
