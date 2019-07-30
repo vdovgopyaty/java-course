@@ -16,10 +16,6 @@ public class Server {
     public Server() {
         clients = new Vector<>();
 
-        if (!Database.connect()) {
-            throw new RuntimeException("Unable to connect to the database");
-        }
-
         authService = new DatabaseAuthService();
 
         try (ServerSocket serverSocket = new ServerSocket(8080)) {

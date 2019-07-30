@@ -1,5 +1,6 @@
 package ru.vdovgopyaty.chat.server;
 
+import java.io.File;
 import java.sql.*;
 
 public class Database {
@@ -10,12 +11,21 @@ public class Database {
     private static PreparedStatement changeUserNicknameStatement;
     private static PreparedStatement deleteUserStatement;
 
+    private static final String DATABASE_NAME = "chat.db";
+
+    public static void createNewDatabase() {
+        String databaseFolder = System.getProperty("user.dir") + "/database/";
+        new File(databaseFolder).mkdirs();
+        String url = "jdbc:sqlite:" + databaseFolder + DATABASE_NAME;
+    }
+
     public static boolean connect() {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:database/chat.db");
             System.out.println("Connected to the database");
             statement = connection.createStatement();
+            dropAllTables();
             createUserTable();
             prepareAllStatement();
             return true;
@@ -36,6 +46,10 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void dropAllTables() throws SQLException {
+        statement.executeUpdate("DROP TABLE IF EXISTS user");
     }
 
     public static void createUserTable() throws SQLException {
