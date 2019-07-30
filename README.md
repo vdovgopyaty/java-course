@@ -22,7 +22,7 @@
 6. Logging and Testing
 7. Reflection API and Annotations
 
-## [Java Core 3](core-4/)
+## [Java Core 4](core-4/)
 
 1. Maven
 2. Java NIO
