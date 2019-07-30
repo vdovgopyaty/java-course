@@ -12,6 +12,10 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import ru.vdovgopyaty.cloud.server.authservice.AuthService;
+import ru.vdovgopyaty.cloud.server.authservice.DatabaseAuthService;
+import ru.vdovgopyaty.cloud.server.handler.AuthHandler;
+import ru.vdovgopyaty.cloud.server.handler.MainHandler;
 
 public class Server {
 

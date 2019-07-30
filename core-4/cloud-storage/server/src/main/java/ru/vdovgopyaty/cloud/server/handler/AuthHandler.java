@@ -1,4 +1,4 @@
-package ru.vdovgopyaty.cloud.server;
+package ru.vdovgopyaty.cloud.server.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -6,12 +6,13 @@ import ru.vdovgopyaty.cloud.common.messages.AccessAllowedMessage;
 import ru.vdovgopyaty.cloud.common.messages.AccessDeniedMessage;
 import ru.vdovgopyaty.cloud.common.messages.AuthMessage;
 import ru.vdovgopyaty.cloud.common.messages.Message;
+import ru.vdovgopyaty.cloud.server.authservice.AuthService;
 
 public class AuthHandler extends ChannelInboundHandlerAdapter {
 
     private AuthService authService;
 
-    AuthHandler(AuthService authService) {
+    public AuthHandler(AuthService authService) {
         this.authService = authService;
     }
 

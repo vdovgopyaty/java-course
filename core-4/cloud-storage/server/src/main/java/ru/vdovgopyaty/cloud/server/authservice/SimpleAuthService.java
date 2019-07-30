@@ -1,4 +1,4 @@
-package ru.vdovgopyaty.cloud.server;
+package ru.vdovgopyaty.cloud.server.authservice;
 
 import java.util.ArrayList;
 import java.util.List;

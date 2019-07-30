@@ -1,4 +1,4 @@
-package ru.vdovgopyaty.cloud.server;
+package ru.vdovgopyaty.cloud.server.handler;
 
 import ru.vdovgopyaty.cloud.common.FileInfo;
 import ru.vdovgopyaty.cloud.common.messages.*;
