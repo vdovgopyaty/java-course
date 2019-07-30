@@ -8,8 +8,8 @@
 4. GUI - JavaFX
 5. Multithreading
 6. Networking
-7. Network Chat (Part 1)
-8. Network Chat (Part 2)
+7. Project - Network Chat (Part 1)
+8. Project - Network Chat (Part 2)
 
 
 ## [Java Core 3](core-3/)
@@ -22,6 +22,14 @@
 6. Logging and Testing
 7. Reflection API and Annotations
 
+## [Java Core 3](core-4/)
+
+1. Maven
+2. Java NIO
+3. Netty Framework
+4. Stream API
+5. JVM and GC
+6. Project - Cloud Storage
 
 ## [Java Data Structures and Algorithms](data-structures/)
 
