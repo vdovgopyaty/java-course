@@ -1,4 +1,4 @@
-# Geekbrains Java Cource
+# Geekbrains Java Course
 
 ## [Java Core 2](core-2/)
 
